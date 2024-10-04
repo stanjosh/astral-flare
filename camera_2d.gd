@@ -11,11 +11,11 @@ var noise_index : float = 0.0
 func get_shake_offset(delta : float) -> Vector2:
 	noise_index += delta * shake_speed
 	shake_strength = lerp(shake_strength, 0.0, shake_decay * delta)
-	#var random_offset = Vector2(randf_range(-shake_strength, shake_strength), randf_range(-shake_strength, shake_strength))
+	var random_offset = Vector2(randf_range(-shake_strength, shake_strength), randf_range(-shake_strength, shake_strength))
 	return Vector2(
 		shake_noise.get_noise_2d(1, noise_index) * shake_strength,
 		shake_noise.get_noise_2d(100, noise_index) * shake_strength
-	) + shake_angle * shake_strength
+	) + shake_angle * shake_strength + random_offset
 	
 func shake(speed : float = shake_speed, strength : float = shake_strength, decay : float = shake_decay, angle : Vector2 = Vector2(0,0)):
 	shake_speed = speed

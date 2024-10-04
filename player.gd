@@ -22,10 +22,10 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	cpu_particles_2d.emitting = false if brake else true
 	thrust = inverse_lerp(0, thrust, 0.25)
-	spin = lerpf(spin, 0, delta) if brake else lerpf(spin, 0, 20 * delta)
+	spin = lerpf(spin, 0, delta) if brake else lerpf(spin, 0, 25 * delta)
 	if Input.is_action_pressed("fire"):
 		if get_tree().get_node_count_in_group("player_bullets") < 5 and fire_cooldown < 0:
-			%Camera.shake(500, 1, .02, Vector2.from_angle(transform.get_rotation()))
+			Camera.shake(40, 3, 10, Vector2.from_angle(transform.get_rotation()))
 			fire_cooldown = .3
 			var bullet = BULLET.instantiate()
 			bullet.global_position = aim_point.global_position
@@ -34,11 +34,11 @@ func _process(delta: float) -> void:
 	fire_cooldown -= delta
 	brake = Input.is_action_pressed("brake")
 	thrust = Input.get_axis("throttle_down", "throttle_up") * thrust_power
-	%Camera.shake(1500, thrust / thrust_power, .02, Vector2.from_angle(transform.get_rotation()))
+	
 	spin += Input.get_axis("left", "right")
 
 func _physics_process(delta: float) -> void:
-	
+
 	constant_torque = spin * turn_strength
 	if not brake:
 		constant_force = Vector2(thrust, 0).rotated(transform.get_rotation())

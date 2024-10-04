@@ -2,11 +2,19 @@ extends RigidBody2D
 class_name Asteroid
 @onready var line_2d: Line2D = $Line2D
 @onready var collision_polygon_2d: CollisionPolygon2D = $CollisionPolygon2D
-var health : float = 100
-func _ready() -> void:
-	line_2d.points = collision_polygon_2d.polygon
-	apply_central_force(Vector2(randfn(1000, 2000), 0).rotated(global_position.angle_to_point(get_viewport_rect().get_center())))
+@onready var cpu_particles_2d: CPUParticles2D = $CPUParticles2D
 
+var stage : int = 3
+var collision_pos : Vector2 = Vector2.ZERO
+var rumble : bool
+
+func _ready() -> void:
+	size_to_stage()
+	apply_central_force(Vector2(randfn(1000, 500), randfn(1000, 500)))
+
+func _process(delta: float) -> void:
+	if rumble:
+		Camera.shake(1000, stage, 1.2)
 
 func _physics_process(delta: float) -> void:
 	screen_wrap()
@@ -16,16 +24,44 @@ func screen_wrap():
 	global_position.x = wrapf(global_position.x, -20, screen_size.x + 20)
 	global_position.y = wrapf(global_position.y, -20, screen_size.y + 20)
 
-func take_damage(damage : int, angle : float) -> void:
-	if health - damage <= 0:
-
+func take_damage(damage : int = 1, angle : float = 0) -> void:
+	cpu_particles_2d.position = collision_pos
+	cpu_particles_2d.emitting = true
+	stage -= 1
+	size_to_stage()
+	for i in range(stage):
 		var asteroid = self.duplicate(8)
-		
-		get_parent().add_child(asteroid)
-		asteroid.collision_polygon_2d.scale = Vector2(0.5, 0.5)
-		asteroid.line_2d.scale =  Vector2(0.5, 0.5)
-		collision_polygon_2d.scale = Vector2(0.5, 0.5)
-		line_2d.scale =  Vector2(0.5, 0.5)
-	health -= damage
+		asteroid.stage = stage
+		if asteroid.stage > 0:
+			get_parent().call_deferred("add_child", asteroid)
+			asteroid.global_position.y = global_position.y + randf() * 20
+			asteroid.global_position.x = global_position.x + randf() * 20
+	if stage <= 0:
+		die()
 	apply_impulse(Vector2.from_angle(angle) * damage)
-	
+
+func _integrate_forces(state) -> void:
+	if state.get_contact_count() > 0:
+		collision_pos = to_local(state.get_contact_local_position(0))
+
+func size_to_stage():
+	line_2d.points = collision_polygon_2d.polygon
+	collision_polygon_2d.scale = Vector2.ONE * stage * .66
+	line_2d.scale =  Vector2.ONE * stage * .66
+
+
+func die():
+	line_2d.hide()
+	await cpu_particles_2d.finished
+	queue_free()
+
+func _on_body_entered(body: Node) -> void:
+	rumble = true
+	if body.is_in_group("asteroids") and body.stage > 0:
+		(body as Asteroid)
+		if linear_velocity.length() > 100 / body.stage and body.stage <= stage:
+			body.take_damage(0, get_angle_to(body.global_position))
+
+
+func _on_body_exited(body: Node) -> void:
+	rumble = false

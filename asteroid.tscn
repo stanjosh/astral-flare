@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3 uid="uid://dnr8lmi8m8giv"]
+[gd_scene load_steps=4 format=3 uid="uid://dnr8lmi8m8giv"]
 
 [ext_resource type="Script" path="res://asteroid.gd" id="1_ketga"]
 
@@ -6,13 +6,37 @@
 friction = 0.0
 bounce = 1.0
 
-[node name="Asteroid" type="RigidBody2D"]
+[sub_resource type="Curve" id="Curve_5rj4t"]
+max_value = 2.0
+_data = [Vector2(0, 2), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[node name="Asteroid" type="RigidBody2D" groups=["asteroids"]]
 top_level = true
 physics_material_override = SubResource("PhysicsMaterial_1ha3f")
 gravity_scale = 0.0
+contact_monitor = true
+max_contacts_reported = 2
 linear_damp_mode = 1
 angular_damp_mode = 1
 script = ExtResource("1_ketga")
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="."]
+emitting = false
+amount = 1000
+one_shot = true
+speed_scale = 2.0
+explosiveness = 0.83
+lifetime_randomness = 0.73
+emission_shape = 2
+emission_sphere_radius = 20.0
+direction = Vector2(0, 1)
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_max = 20.0
+scale_amount_min = 0.0
+scale_amount_max = 2.0
+scale_amount_curve = SubResource("Curve_5rj4t")
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
 polygon = PackedVector2Array(-7, -14, 3, -17, 12, -15, 16, 1, 13, 15, -5, 20, -18, 10, -16, -6)
@@ -20,3 +44,7 @@ polygon = PackedVector2Array(-7, -14, 3, -17, 12, -15, 16, 1, 13, 15, -5, 20, -1
 [node name="Line2D" type="Line2D" parent="."]
 closed = true
 width = 1.0
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_exited" from="." to="." method="_on_body_exited"]
+[connection signal="finished" from="CPUParticles2D" to="." method="_on_cpu_particles_2d_finished"]

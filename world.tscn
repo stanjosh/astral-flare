@@ -1,9 +1,8 @@
-[gd_scene load_steps=11 format=3 uid="uid://bwm06rf4x2u02"]
+[gd_scene load_steps=10 format=3 uid="uid://bwm06rf4x2u02"]
 
 [ext_resource type="Shader" path="res://background.gdshader" id="1_22rc5"]
 [ext_resource type="Script" path="res://player.gd" id="1_pc0pg"]
 [ext_resource type="Script" path="res://background.gd" id="2_x8a3h"]
-[ext_resource type="Script" path="res://camera_2d.gd" id="4_ku52h"]
 [ext_resource type="PackedScene" uid="uid://dnr8lmi8m8giv" path="res://asteroid.tscn" id="5_fc2uf"]
 [ext_resource type="Script" path="res://asteroid_spawner.gd" id="6_nasyb"]
 
@@ -77,19 +76,20 @@ position = Vector2(11, 0)
 visible = false
 polygon = PackedVector2Array(-8, -8, 12, 0, -8, 8)
 
-[node name="Camera" type="Camera2D" parent="."]
-unique_name_in_owner = true
-anchor_mode = 0
-script = ExtResource("4_ku52h")
-
 [node name="Asteroid" parent="." instance=ExtResource("5_fc2uf")]
 
 [node name="AsteroidSpawner" type="Path2D" parent="."]
 curve = SubResource("Curve2D_ayrop")
 script = ExtResource("6_nasyb")
 
+[node name="Timer" type="Timer" parent="AsteroidSpawner"]
+autostart = true
+
 [node name="PathFollow2D" type="PathFollow2D" parent="AsteroidSpawner"]
 position = Vector2(-12, -13)
 rotation = 0.00308879
 
 [node name="Asteroids" type="Node2D" parent="AsteroidSpawner"]
+
+[connection signal="body_entered" from="Player" to="Player" method="_on_body_entered"]
+[connection signal="timeout" from="AsteroidSpawner/Timer" to="AsteroidSpawner" method="_on_timer_timeout"]
