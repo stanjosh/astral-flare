@@ -18,11 +18,14 @@ func screen_wrap():
 
 func take_damage(damage : int, angle : float) -> void:
 	if health - damage <= 0:
-		scale = Vector2(0.5, 0.5)
+
 		var asteroid = self.duplicate(8)
-		asteroid.scale = Vector2(0.5, 0.5)
-		scale = Vector2(0.5, 0.5)
+		
 		get_parent().add_child(asteroid)
+		asteroid.collision_polygon_2d.scale = Vector2(0.5, 0.5)
+		asteroid.line_2d.scale =  Vector2(0.5, 0.5)
+		collision_polygon_2d.scale = Vector2(0.5, 0.5)
+		line_2d.scale =  Vector2(0.5, 0.5)
 	health -= damage
 	apply_impulse(Vector2.from_angle(angle) * damage)
 	
