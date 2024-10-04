@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://cwjsk735ml4nb"]
+
+[ext_resource type="Script" path="res://bullet.gd" id="1_hyaad"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qm0q5"]
+size = Vector2(5, 5)
+
+[node name="Bullet" type="Area2D" groups=["player_bullets"]]
+top_level = true
+script = ExtResource("1_hyaad")
+
+[node name="Line2D" type="Line2D" parent="."]
+points = PackedVector2Array(2, 0, -2, 0)
+width = 4.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_qm0q5")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

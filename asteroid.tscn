@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=3 uid="uid://dnr8lmi8m8giv"]
+
+[ext_resource type="Script" path="res://asteroid.gd" id="1_ketga"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_1ha3f"]
+friction = 0.0
+bounce = 1.0
+
+[node name="Asteroid" type="RigidBody2D"]
+top_level = true
+physics_material_override = SubResource("PhysicsMaterial_1ha3f")
+gravity_scale = 0.0
+linear_damp_mode = 1
+angular_damp_mode = 1
+script = ExtResource("1_ketga")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(-7, -14, 3, -17, 12, -15, 16, 1, 13, 15, -5, 20, -18, 10, -16, -6)
+
+[node name="Line2D" type="Line2D" parent="."]
+closed = true
+width = 1.0
