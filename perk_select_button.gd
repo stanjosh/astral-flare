@@ -5,7 +5,7 @@ extends Button
 @onready var description: RichTextLabel = $PerkSelectContainer/PanelContainer/VBoxContainer/MarginContainer3/Description
 
 
-var perk_info
+var perk_info : LevelPerk
 
 func _update(perk_info):
 	title.text = perk_info.title
