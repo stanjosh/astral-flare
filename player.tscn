@@ -1,0 +1,64 @@
+[gd_scene load_steps=5 format=3 uid="uid://bqou3j3rffeh6"]
+
+[ext_resource type="Script" path="res://player.gd" id="1_ftq3x"]
+
+[sub_resource type="Curve" id="Curve_oqny5"]
+_data = [Vector2(0.011236, 0), 0.0, 0.0, 0, 0, Vector2(0.224719, 0.879121), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Gradient" id="Gradient_gsixn"]
+offsets = PackedFloat32Array(0, 0.845679, 1)
+colors = PackedColorArray(0, 0.752941, 0.752941, 0.564706, 0.359979, 0.76731, 1, 0.937255, 0, 0.603922, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_gbuy4"]
+gradient = SubResource("Gradient_gsixn")
+width = 32
+height = 32
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.5, 0)
+
+[node name="Player" type="RigidBody2D" groups=["player"]]
+gravity_scale = 0.0
+contact_monitor = true
+max_contacts_reported = 3
+linear_damp = 1.0
+angular_damp = 2.0
+script = ExtResource("1_ftq3x")
+
+[node name="ShipLines" type="Line2D" parent="."]
+points = PackedVector2Array(-8, -8, 12, 0, -8, 8)
+closed = true
+width = 2.0
+joint_mode = 2
+end_cap_mode = 2
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="ShipLines"]
+position = Vector2(-11, 0)
+amount = 100
+preprocess = 0.5
+lifetime_randomness = 1.0
+emission_shape = 3
+emission_rect_extents = Vector2(1, 4)
+direction = Vector2(-1, 0)
+spread = 0.0
+gravity = Vector2(0, 0)
+initial_velocity_max = 15.0
+radial_accel_min = -40.0
+radial_accel_max = -40.0
+scale_amount_min = 0.0
+scale_amount_max = 2.0
+scale_amount_curve = SubResource("Curve_oqny5")
+
+[node name="AimPoint" type="Marker2D" parent="ShipLines"]
+position = Vector2(11, 0)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+visible = false
+polygon = PackedVector2Array(-8, -8, 12, 0, -8, 8)
+
+[node name="Shield" type="Sprite2D" parent="."]
+modulate = Color(1, 1, 1, 0)
+texture = SubResource("GradientTexture2D_gbuy4")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

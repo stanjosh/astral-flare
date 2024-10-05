@@ -2,6 +2,7 @@ extends Area2D
 
 var speed : float = 5
 
+signal xp_gain
 
 func _ready() -> void:
 	add_to_group("player_bullets")
@@ -19,4 +20,5 @@ func _physics_process(delta: float) -> void:
 func _on_body_entered(body: Node2D) -> void:
 	if body is Asteroid:
 		body.take_damage(100, rotation)
+		xp_gain.emit()
 		queue_free()

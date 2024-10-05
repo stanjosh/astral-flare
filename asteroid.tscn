@@ -21,7 +21,7 @@ linear_damp_mode = 1
 angular_damp_mode = 1
 script = ExtResource("1_ketga")
 
-[node name="CPUParticles2D" type="CPUParticles2D" parent="."]
+[node name="DeathParticles" type="CPUParticles2D" parent="."]
 emitting = false
 amount = 1000
 one_shot = true
@@ -38,6 +38,21 @@ scale_amount_min = 0.0
 scale_amount_max = 2.0
 scale_amount_curve = SubResource("Curve_5rj4t")
 
+[node name="CollisionParticles" type="CPUParticles2D" parent="."]
+emitting = false
+amount = 100
+one_shot = true
+speed_scale = 2.0
+explosiveness = 0.83
+lifetime_randomness = 0.73
+direction = Vector2(0, 1)
+spread = 90.0
+gravity = Vector2(0, 0)
+initial_velocity_max = 20.0
+scale_amount_min = 0.0
+scale_amount_max = 2.0
+scale_amount_curve = SubResource("Curve_5rj4t")
+
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
 polygon = PackedVector2Array(-7, -14, 3, -17, 12, -15, 16, 1, 13, 15, -5, 20, -18, 10, -16, -6)
 
@@ -47,4 +62,5 @@ width = 1.0
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
 [connection signal="body_exited" from="." to="." method="_on_body_exited"]
-[connection signal="finished" from="CPUParticles2D" to="." method="_on_cpu_particles_2d_finished"]
+[connection signal="finished" from="DeathParticles" to="." method="_on_cpu_particles_2d_finished"]
+[connection signal="finished" from="CollisionParticles" to="." method="_on_cpu_particles_2d_finished"]

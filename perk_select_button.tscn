@@ -1,0 +1,72 @@
+[gd_scene load_steps=3 format=3 uid="uid://b648n8jfyl2l1"]
+
+[ext_resource type="Script" path="res://perk_select_button.gd" id="1_k765v"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_bscx0"]
+size = Vector2(32, 32)
+
+[node name="PerkSelectButton" type="Button"]
+offset_right = 1280.0
+offset_bottom = 720.0
+flat = true
+script = ExtResource("1_k765v")
+
+[node name="PerkSelectContainer" type="MarginContainer" parent="."]
+custom_minimum_size = Vector2(320, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
+
+[node name="PanelContainer" type="PanelContainer" parent="PerkSelectContainer"]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PerkSelectContainer/PanelContainer"]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="MarginContainer2" type="MarginContainer" parent="PerkSelectContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="Title" type="RichTextLabel" parent="PerkSelectContainer/PanelContainer/VBoxContainer/MarginContainer2"]
+layout_mode = 2
+text = "Title"
+fit_content = true
+
+[node name="MarginContainer" type="MarginContainer" parent="PerkSelectContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="Image" type="TextureRect" parent="PerkSelectContainer/PanelContainer/VBoxContainer/MarginContainer"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = SubResource("PlaceholderTexture2D_bscx0")
+
+[node name="MarginContainer3" type="MarginContainer" parent="PerkSelectContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="Description" type="RichTextLabel" parent="PerkSelectContainer/PanelContainer/VBoxContainer/MarginContainer3"]
+layout_mode = 2
+text = "In hac habitasse platea dictumst. Vestibulum vitae nunc laoreet ante varius ornare non ut felis."
+fit_content = true

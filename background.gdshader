@@ -10,6 +10,10 @@ const float stepsize = 0.290;
 const float zoom = 1.0;
 const float tile = 0.850;
 uniform float speed2 = 0.2;
+
+uniform float colorval1 = 0.15;
+uniform float colorval2 = 0.05;
+uniform float colorval3 = 0.10;
  
 const float brightness = 0.0015;
 const float darkmatter = 0.100;
@@ -151,10 +155,10 @@ void fragment() {
 
 	vec4 forCol2 = vec4(v*.01,1.);	
 	backCol2 *= cloud;	
-	backCol2.b *= 1.8;
-	backCol2.r *= 0.05;	
+	backCol2.b *= colorval1;
+	backCol2.r *= colorval2;	
 	
-	backCol2.b = 0.5*mix(backCol2.g, backCol2.b, 0.8);
+	backCol2.b = 0.5*mix(backCol2.g, backCol2.b, colorval3);
 	backCol2.g = 0.0;
 	backCol2.bg = mix(backCol2.gb, backCol2.bg, 0.5*(cos(time*0.01) + 1.0));	
 	COLOR = forCol2 + vec4(backCol2, 1.0);

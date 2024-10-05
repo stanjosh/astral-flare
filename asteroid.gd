@@ -2,7 +2,8 @@ extends RigidBody2D
 class_name Asteroid
 @onready var line_2d: Line2D = $Line2D
 @onready var collision_polygon_2d: CollisionPolygon2D = $CollisionPolygon2D
-@onready var cpu_particles_2d: CPUParticles2D = $CPUParticles2D
+@onready var death_particles: CPUParticles2D = $DeathParticles
+@onready var collision_particles: CPUParticles2D = $CollisionParticles
 
 var stage : int = 3
 var collision_pos : Vector2 = Vector2.ZERO
@@ -21,14 +22,13 @@ func _physics_process(delta: float) -> void:
 
 func screen_wrap():
 	var screen_size = get_viewport_rect().size
-	global_position.x = wrapf(global_position.x, -20, screen_size.x + 20)
-	global_position.y = wrapf(global_position.y, -20, screen_size.y + 20)
+	global_position.x = wrapf(global_position.x, -30, screen_size.x + 30)
+	global_position.y = wrapf(global_position.y, -30, screen_size.y + 30)
 
 func take_damage(damage : int = 1, angle : float = 0) -> void:
-	cpu_particles_2d.position = collision_pos
-	cpu_particles_2d.emitting = true
+	death_particles.position = collision_pos
+	death_particles.emitting = true
 	stage -= 1
-	size_to_stage()
 	for i in range(stage):
 		var asteroid = self.duplicate(8)
 		asteroid.stage = stage
@@ -38,6 +38,8 @@ func take_damage(damage : int = 1, angle : float = 0) -> void:
 			asteroid.global_position.x = global_position.x + randf() * 20
 	if stage <= 0:
 		die()
+	else:
+		size_to_stage()
 	apply_impulse(Vector2.from_angle(angle) * damage)
 
 func _integrate_forces(state) -> void:
@@ -46,22 +48,26 @@ func _integrate_forces(state) -> void:
 
 func size_to_stage():
 	line_2d.points = collision_polygon_2d.polygon
+	mass = float(stage)
 	collision_polygon_2d.scale = Vector2.ONE * stage * .66
 	line_2d.scale =  Vector2.ONE * stage * .66
 
 
 func die():
 	line_2d.hide()
-	await cpu_particles_2d.finished
+	await death_particles.finished
 	queue_free()
 
 func _on_body_entered(body: Node) -> void:
 	rumble = true
-	if body.is_in_group("asteroids") and body.stage > 0:
-		(body as Asteroid)
-		if linear_velocity.length() > 100 / body.stage and body.stage <= stage:
-			body.take_damage(0, get_angle_to(body.global_position))
-
+	if stage > 0 and body.is_in_group("asteroids") and body.stage > 0:
+		if linear_velocity.length() > 100 / stage:
+			if body.stage <= stage:
+				body.take_damage(0, get_angle_to(body.global_position))
+	collision_particles.direction = global_position.direction_to(body.global_position)
+	collision_particles.position = collision_pos
+	collision_particles.emitting = true
+	collision_particles.initial_velocity_max = body.linear_velocity.length()
 
 func _on_body_exited(body: Node) -> void:
 	rumble = false

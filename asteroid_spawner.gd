@@ -23,6 +23,5 @@ func _on_timer_timeout() -> void:
 	var asteroids_amount = asteroids \
 	.map(func(a): return a.stage) \
 	.reduce(func(a, b): return a + b)
-	print(asteroids_amount)
 	if asteroids_amount < max_asteroids:
 		spawn()
