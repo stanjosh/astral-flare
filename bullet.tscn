@@ -7,6 +7,7 @@ size = Vector2(5, 5)
 
 [node name="Bullet" type="Area2D" groups=["player_bullets"]]
 top_level = true
+collision_mask = 4
 script = ExtResource("1_hyaad")
 
 [node name="Line2D" type="Line2D" parent="."]

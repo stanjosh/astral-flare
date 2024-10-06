@@ -12,6 +12,7 @@ var collision_pos : Vector2
 var collision_impulse : Vector2
 
 
+
 @export var thrust_power = 100
 @export var turn_strength = 30
 @export var max_bullets : int = 3
@@ -58,7 +59,6 @@ func _process(delta: float) -> void:
 	spin += Input.get_axis("left", "right")
 
 func _physics_process(delta: float) -> void:
-	turret.look_at(get_global_mouse_position())
 	constant_torque = spin * turn_strength
 	if not brake:
 		constant_force = Vector2(thrust, 0).rotated(transform.get_rotation())

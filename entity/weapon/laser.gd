@@ -1,4 +1,4 @@
-extends Node2D
+extends Weapon
 
 
 var heat : float = 100
@@ -12,13 +12,15 @@ var max_heat : float = 100
 @onready var damage_timer: Timer = $DamageTimer
 
 @export var damage : float = 120
-var emitting : bool = false
 
 func _physics_process(delta: float) -> void:
-	var target_pos = get_global_mouse_position()
-	emitting = true if Input.is_action_pressed("fire") else false
-	if emitting:
-		ray_cast_2d.target_position = to_local(target_pos)
+	
+	cpu_particles_2d.hide()
+	cpu_particles_2d.hide()
+	laser_line.hide()
+	if is_instance_valid(target):
+		look_at(target.global_position)
+		ray_cast_2d.target_position = to_local(target.global_position)
 		if ray_cast_2d.is_colliding():
 			if damage_timer.is_stopped():
 				var hit_object = ray_cast_2d.get_collider()
@@ -26,18 +28,11 @@ func _physics_process(delta: float) -> void:
 					print("asteroid")
 					hit_object.take_damage(damage, ray_cast_2d.get_collision_normal().angle())
 					damage_timer.start()
-			target_pos = ray_cast_2d.get_collision_point()
-			cpu_particles_2d.global_position = target_pos
+			cpu_particles_2d.global_position = ray_cast_2d.get_collision_point()
 			cpu_particles_2d.show()
-			laser_line.points[1] = to_local(target_pos)
+			laser_line.points[1] = to_local(ray_cast_2d.get_collision_point())
 			laser_line.show()
-	else:
-		cpu_particles_2d.hide()
-		cpu_particles_2d.hide()
-		laser_line.hide()
 
-		
-	
 
 func set_color(color: Color) -> void:
 	laser_line.modulate = color

@@ -13,6 +13,8 @@ point_count = 2
 
 [node name="Asteroid" type="RigidBody2D" groups=["asteroids"]]
 top_level = true
+collision_layer = 4
+collision_mask = 5
 physics_material_override = SubResource("PhysicsMaterial_1ha3f")
 gravity_scale = 0.0
 contact_monitor = true
