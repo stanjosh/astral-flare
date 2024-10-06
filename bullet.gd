@@ -1,7 +1,7 @@
 extends Area2D
 
 var speed : float = 5
-
+var damage : int = 100
 signal xp_gain
 
 func _ready() -> void:
@@ -19,6 +19,6 @@ func _physics_process(delta: float) -> void:
 
 func _on_body_entered(body: Node2D) -> void:
 	if body is Asteroid:
-		body.take_damage(100, rotation)
+		body.take_damage(damage, rotation)
 		xp_gain.emit()
 		queue_free()

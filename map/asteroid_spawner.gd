@@ -3,7 +3,7 @@ extends Path2D
 
 @export var max_asteroids = 15
 
-const ASTEROID = preload("res://asteroid.tscn")
+const ASTEROID = preload("res://entity/asteroid.tscn")
 func spawn():
 	$PathFollow2D.progress_ratio = randf()
 	var asteroid = ASTEROID.instantiate()
@@ -19,9 +19,6 @@ func _input(event: InputEvent) -> void:
 
 
 func _on_timer_timeout() -> void:
-	var asteroids = get_tree().get_nodes_in_group("asteroids")
-	var asteroids_amount = asteroids \
-	.map(func(a): return a.stage) \
-	.reduce(func(a, b): return a + b)
-	if asteroids_amount < max_asteroids:
+	var asteroids = get_tree().get_node_count_in_group("asteroids")
+	if asteroids < max_asteroids:
 		spawn()

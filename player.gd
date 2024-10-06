@@ -4,8 +4,8 @@ class_name Player
 const BULLET = preload("res://bullet.tscn")
 @onready var ship_lines: Line2D = $ShipLines
 @onready var cpu_particles_2d: CPUParticles2D = $ShipLines/CPUParticles2D
-@onready var aim_point : Marker2D = $ShipLines/AimPoint
 @onready var shield_vis : Sprite2D = $Shield
+@onready var turret: Node2D = $Turret
 
 
 var collision_pos : Vector2
@@ -58,7 +58,7 @@ func _process(delta: float) -> void:
 	spin += Input.get_axis("left", "right")
 
 func _physics_process(delta: float) -> void:
-
+	turret.look_at(get_global_mouse_position())
 	constant_torque = spin * turn_strength
 	if not brake:
 		constant_force = Vector2(thrust, 0).rotated(transform.get_rotation())
@@ -70,7 +70,7 @@ func fire_bullets() -> bool:
 		for i in range(shot_pellets):
 			var bullet = BULLET.instantiate()
 			bullet.speed = bullet_speed
-			bullet.global_position = aim_point.global_position
+			bullet.global_position = to_global(ship_lines.points[1])
 			bullet.global_rotation = ship_lines.global_rotation
 			bullet.xp_gain.connect(_on_xp_gain)
 			if i > 1:

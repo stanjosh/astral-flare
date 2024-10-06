@@ -6,6 +6,7 @@ class_name Asteroid
 @onready var collision_particles: CPUParticles2D = $CollisionParticles
 
 var stage : int = 3
+var health = 100 * stage
 var collision_pos : Vector2 = Vector2.ZERO
 var rumble : bool
 
@@ -26,21 +27,26 @@ func screen_wrap():
 	global_position.y = wrapf(global_position.y, -30, screen_size.y + 30)
 
 func take_damage(damage : int = 1, angle : float = 0) -> void:
-	death_particles.position = collision_pos
-	death_particles.emitting = true
-	stage -= 1
-	for i in range(stage):
-		var asteroid = self.duplicate(8)
-		asteroid.stage = stage
-		if asteroid.stage > 0:
-			get_parent().call_deferred("add_child", asteroid)
-			asteroid.global_position.y = global_position.y + randf() * 20
-			asteroid.global_position.x = global_position.x + randf() * 20
-	if stage <= 0:
-		die()
-	else:
-		size_to_stage()
-	apply_impulse(Vector2.from_angle(angle) * damage)
+	prints(damage)
+	collision_particles.emitting = true
+	health -= damage
+	if health <= 0:
+		stage -= 1
+		if stage <= 0:
+			call_deferred("die")
+		else:
+			size_to_stage()
+			for i in range(stage):
+				var asteroid = self.duplicate(8)
+				asteroid.stage = stage
+				asteroid.health = health
+				if asteroid.stage > 0:
+					get_parent().call_deferred("add_child", asteroid)
+					asteroid.global_position.y = global_position.y + randf() * 20
+					asteroid.global_position.x = global_position.x + randf() * 20
+			apply_impulse(Vector2.from_angle(angle) * damage)
+
+	
 
 func _integrate_forces(state) -> void:
 	if state.get_contact_count() > 0:
@@ -49,11 +55,15 @@ func _integrate_forces(state) -> void:
 func size_to_stage():
 	line_2d.points = collision_polygon_2d.polygon
 	mass = float(stage)
+	health = 100 * stage
 	collision_polygon_2d.scale = Vector2.ONE * stage * .66
 	line_2d.scale =  Vector2.ONE * stage * .66
 
 
 func die():
+	death_particles.position = collision_pos
+	death_particles.emitting = true
+	collision_polygon_2d.disabled = true
 	line_2d.hide()
 	await death_particles.finished
 	queue_free()
@@ -66,8 +76,9 @@ func _on_body_entered(body: Node) -> void:
 				body.take_damage(0, get_angle_to(body.global_position))
 	collision_particles.direction = global_position.direction_to(body.global_position)
 	collision_particles.position = collision_pos
-	collision_particles.emitting = true
+	collision_particles.scale = stage * Vector2.ONE
 	collision_particles.initial_velocity_max = body.linear_velocity.length()
+	collision_particles.emitting = true
 
 func _on_body_exited(body: Node) -> void:
 	rumble = false

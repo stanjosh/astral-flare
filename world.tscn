@@ -1,10 +1,10 @@
 [gd_scene load_steps=9 format=3 uid="uid://bwm06rf4x2u02"]
 
-[ext_resource type="Shader" path="res://background.gdshader" id="1_22rc5"]
-[ext_resource type="Script" path="res://background.gd" id="2_x8a3h"]
+[ext_resource type="Shader" path="res://map/background.gdshader" id="1_22rc5"]
+[ext_resource type="Script" path="res://map/background.gd" id="2_x8a3h"]
 [ext_resource type="PackedScene" uid="uid://bqou3j3rffeh6" path="res://player.tscn" id="3_o8r61"]
-[ext_resource type="PackedScene" uid="uid://dnr8lmi8m8giv" path="res://asteroid.tscn" id="5_fc2uf"]
-[ext_resource type="Script" path="res://asteroid_spawner.gd" id="6_nasyb"]
+[ext_resource type="PackedScene" uid="uid://dnr8lmi8m8giv" path="res://entity/asteroid.tscn" id="5_fc2uf"]
+[ext_resource type="Script" path="res://map/asteroid_spawner.gd" id="6_nasyb"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_3p241"]
 shader = ExtResource("1_22rc5")

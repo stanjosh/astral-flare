@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://dnr8lmi8m8giv"]
 
-[ext_resource type="Script" path="res://asteroid.gd" id="1_ketga"]
+[ext_resource type="Script" path="res://entity/asteroid.gd" id="1_fdt1j"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_1ha3f"]
 friction = 0.0
@@ -19,7 +19,7 @@ contact_monitor = true
 max_contacts_reported = 2
 linear_damp_mode = 1
 angular_damp_mode = 1
-script = ExtResource("1_ketga")
+script = ExtResource("1_fdt1j")
 
 [node name="DeathParticles" type="CPUParticles2D" parent="."]
 emitting = false

@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://bqou3j3rffeh6"]
+[gd_scene load_steps=11 format=3 uid="uid://bqou3j3rffeh6"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_ftq3x"]
 [ext_resource type="Script" path="res://laser.gd" id="2_c5doi"]
@@ -31,15 +31,9 @@ height = 24
 fill = 1
 fill_from = Vector2(0.5, 0.5)
 
-[sub_resource type="Curve" id="Curve_lwiyq"]
-max_value = 40.0
-_data = [Vector2(0.0268817, 16.7033), 0.0, 74.9451, 0, 0, Vector2(0.586021, 0), -36.6502, 0.0, 0, 0]
-point_count = 2
-
 [sub_resource type="Curve" id="Curve_j8i2n"]
-max_value = 2.0
-_data = [Vector2(0.0537634, 2), 0.0, 0.0, 0, 0, Vector2(0.61828, 0.681319), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 3
+_data = [Vector2(0.397849, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
 
 [sub_resource type="Gradient" id="Gradient_awabd"]
 colors = PackedColorArray(0, 1, 1, 1, 1, 1, 1, 0)
@@ -99,31 +93,27 @@ texture = SubResource("GradientTexture2D_ax066")
 
 [node name="Laser" type="Node2D" parent="Turret"]
 script = ExtResource("2_c5doi")
+color = Color(1, 0, 0, 1)
 
 [node name="CPUParticles2D" type="CPUParticles2D" parent="Turret/Laser"]
 visible = false
-modulate = Color(1, 0, 0, 1)
 position = Vector2(52, 0)
 amount = 200
 lifetime = 0.5
 speed_scale = 2.0
 lifetime_randomness = 1.0
 direction = Vector2(-1, 0)
-spread = 90.0
+spread = 73.6
 gravity = Vector2(0, 0)
 initial_velocity_min = 15.0
-initial_velocity_max = 100.0
-damping_max = 40.0
-damping_curve = SubResource("Curve_lwiyq")
+initial_velocity_max = 75.0
 scale_amount_min = 0.0
-scale_amount_max = 2.0
 scale_amount_curve = SubResource("Curve_j8i2n")
 
 [node name="LaserLine" type="Line2D" parent="Turret/Laser"]
 visible = false
 points = PackedVector2Array(0, 0, 52, 0)
 width = 3.0
-default_color = Color(1, 0, 0, 1)
 
 [node name="RayCast2D" type="RayCast2D" parent="Turret/Laser"]
 target_position = Vector2(54, 0)
@@ -134,9 +124,5 @@ texture = SubResource("GradientTexture2D_uxt6m")
 [node name="BarrelLine" type="Line2D" parent="Turret/Laser"]
 points = PackedVector2Array(0, 0, 7, 0)
 width = 4.0
-
-[node name="DamageTimer" type="Timer" parent="Turret/Laser"]
-wait_time = 0.5
-one_shot = true
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
