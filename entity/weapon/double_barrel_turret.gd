@@ -13,7 +13,7 @@ var projectile_origin : Vector2 :
 		barrel_one_or_two = !barrel_one_or_two
 		return barrel_1.global_position if barrel_one_or_two else barrel_2.global_position
 
-func _input(event: InputEvent) -> void:
+func _process(delta: float) -> void:
 	if is_instance_valid(target):
 		look_at(target.global_position)
 		if shot_timer.is_stopped():

@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://bhp1aimdbpk6h"]
+[gd_scene load_steps=6 format=3 uid="uid://bhp1aimdbpk6h"]
 
 [ext_resource type="Script" path="res://hud.gd" id="1_q8tit"]
 [ext_resource type="Script" path="res://xp_bar.gd" id="2_8ohjw"]
+[ext_resource type="Script" path="res://debug_info_panel.gd" id="3_hm2g6"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_14le6"]
 bg_color = Color(0, 0, 0, 0.160784)
@@ -72,3 +73,33 @@ theme_override_styles/background = SubResource("StyleBoxFlat_14le6")
 theme_override_styles/fill = SubResource("StyleBoxFlat_b7dfj")
 value = 66.92
 show_percentage = false
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="DebugInfoPanel" type="PanelContainer" parent="."]
+visible = false
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -23.0
+grow_horizontal = 2
+grow_vertical = 0
+size_flags_horizontal = 3
+size_flags_vertical = 8
+script = ExtResource("3_hm2g6")
+
+[node name="MarginContainer" type="MarginContainer" parent="DebugInfoPanel"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="DebugInfoPanel/MarginContainer"]
+layout_mode = 2
+mouse_filter = 1
+text = "TARGET"
+fit_content = true
+
+[connection signal="gui_input" from="DebugInfoPanel" to="DebugInfoPanel" method="_on_gui_input"]

@@ -1,7 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://bqou3j3rffeh6"]
+[gd_scene load_steps=9 format=3 uid="uid://bqou3j3rffeh6"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_ftq3x"]
 [ext_resource type="Script" path="res://turret.gd" id="2_xl6ag"]
+[ext_resource type="PackedScene" uid="uid://b0ocqpn513x0r" path="res://entity/weapon/laser.tscn" id="3_kvgc1"]
 [ext_resource type="PackedScene" uid="uid://cy3bbber30n6q" path="res://entity/weapon/double_barrel_turret.tscn" id="4_y8r60"]
 
 [sub_resource type="Curve" id="Curve_oqny5"]
@@ -70,12 +71,26 @@ script = ExtResource("2_xl6ag")
 [node name="AutoAimArea" type="Area2D" parent="Turret"]
 collision_mask = 4
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Turret/AutoAimArea"]
+[node name="AutoAimAreaShape" type="CollisionShape2D" parent="Turret/AutoAimArea"]
 shape = SubResource("CircleShape2D_1nfl1")
 
 [node name="Weapons" type="Node2D" parent="Turret"]
 
+[node name="Laser" parent="Turret/Weapons" instance=ExtResource("3_kvgc1")]
+
+[node name="Laser2" parent="Turret/Weapons" instance=ExtResource("3_kvgc1")]
+
+[node name="Laser3" parent="Turret/Weapons" instance=ExtResource("3_kvgc1")]
+
+[node name="Laser4" parent="Turret/Weapons" instance=ExtResource("3_kvgc1")]
+
+[node name="Laser5" parent="Turret/Weapons" instance=ExtResource("3_kvgc1")]
+
 [node name="DoubleBarrelTurret" parent="Turret/Weapons" instance=ExtResource("4_y8r60")]
+
+[node name="DoubleBarrelTurret2" parent="Turret/Weapons" instance=ExtResource("4_y8r60")]
+
+[node name="DoubleBarrelTurret3" parent="Turret/Weapons" instance=ExtResource("4_y8r60")]
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
 [connection signal="body_entered" from="Turret/AutoAimArea" to="Turret" method="_on_auto_aim_area_body_entered"]
