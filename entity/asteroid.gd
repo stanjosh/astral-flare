@@ -4,6 +4,8 @@ class_name Asteroid
 @onready var collision_polygon_2d: CollisionPolygon2D = $CollisionPolygon2D
 @onready var death_particles: CPUParticles2D = $DeathParticles
 @onready var collision_particles: CPUParticles2D = $CollisionParticles
+@onready var bump_sound: AudioStreamPlayer2D = $BumpSound
+@onready var pop_sound: AudioStreamPlayer2D = $PopSound
 
 var stage : int = 3
 var health = 100 * stage
@@ -12,11 +14,12 @@ var rumble : bool
 
 func _ready() -> void:
 	size_to_stage()
-	apply_central_force(Vector2(randfn(1000, 500), randfn(1000, 500)))
+	apply_central_impulse(Vector2(randfn(0, 35), randfn(0, 35)))
 
 func _process(delta: float) -> void:
 	if rumble:
 		Camera.shake(1000, stage, 1.2)
+		rumble = false
 
 func _physics_process(delta: float) -> void:
 	screen_wrap()
@@ -28,13 +31,16 @@ func screen_wrap():
 
 func take_damage(damage : int = 1, angle : float = 0) -> void:
 	prints(damage)
-	collision_particles.emitting = true
+	bump_sound.play()
 	health -= damage
 	if health <= 0:
 		stage -= 1
 		if stage <= 0:
 			call_deferred("die")
 		else:
+			death_particles.position = Vector2.ZERO
+			death_particles.emitting = true
+			pop_sound.play()
 			size_to_stage()
 			for i in range(stage):
 				var asteroid = self.duplicate(8)
@@ -44,7 +50,7 @@ func take_damage(damage : int = 1, angle : float = 0) -> void:
 					get_parent().call_deferred("add_child", asteroid)
 					asteroid.global_position.y = global_position.y + randf() * 20
 					asteroid.global_position.x = global_position.x + randf() * 20
-			apply_impulse(Vector2.from_angle(angle) * damage)
+			apply_impulse(Vector2.from_angle(angle) * damage * randf_range(200, 400))
 
 	
 
@@ -54,31 +60,33 @@ func _integrate_forces(state) -> void:
 
 func size_to_stage():
 	line_2d.points = collision_polygon_2d.polygon
-	mass = float(stage)
+	mass = 100 * stage
 	health = 100 * stage
 	collision_polygon_2d.scale = Vector2.ONE * stage * .66
 	line_2d.scale =  Vector2.ONE * stage * .66
 
 
 func die():
+	pop_sound.play()
 	death_particles.position = collision_pos
 	death_particles.emitting = true
 	collision_polygon_2d.disabled = true
 	line_2d.hide()
 	await death_particles.finished
+	if pop_sound.playing:
+		await pop_sound.finished
 	queue_free()
 
 func _on_body_entered(body: Node) -> void:
 	rumble = true
 	if stage > 0 and body.is_in_group("asteroids") and body.stage > 0:
-		if linear_velocity.length() > 100 / stage:
-			if body.stage <= stage:
-				body.take_damage(0, get_angle_to(body.global_position))
-	collision_particles.direction = global_position.direction_to(body.global_position)
-	collision_particles.position = collision_pos
-	collision_particles.scale = stage * Vector2.ONE
-	collision_particles.initial_velocity_max = body.linear_velocity.length()
-	collision_particles.emitting = true
+		if linear_velocity.length() > mass:
+			body.take_damage(0, get_angle_to(body.global_position))
+			collision_particles.direction = global_position.direction_to(body.global_position)
+			collision_particles.position = collision_pos
+			collision_particles.scale = stage * Vector2.ONE
+			collision_particles.initial_velocity_max = body.linear_velocity.length()
+			collision_particles.emitting = true
 
 func _on_body_exited(body: Node) -> void:
 	rumble = false

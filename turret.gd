@@ -23,8 +23,10 @@ func _process(delta: float) -> void:
 
 func assign_targets() -> void:
 	var weapon_index = wrapi(0, 0, weapon_nodes.size() - 1)
-	for target in targets:
-		if !is_instance_valid(weapon_nodes[weapon_index].target):
+	for target in auto_aim_area.get_overlapping_bodies():
+		if target is Asteroid \
+		and !is_instance_valid(weapon_nodes[weapon_index].target) \
+		and target in auto_aim_area.get_overlapping_bodies():
 			weapon_nodes[weapon_index].target = target
 		weapon_index += 1
 
@@ -34,13 +36,3 @@ func get_weapon_nodes() -> Array[Weapon]:
 		if n is Weapon:
 			list.push_back(n)
 	return list
-
-
-func _on_auto_aim_area_body_entered(body: Node2D) -> void:
-	if not body in targets:
-		targets.push_back(body)
-
-
-func _on_auto_aim_area_body_exited(body: Node2D) -> void:
-	if body in targets:
-		targets.erase(body)

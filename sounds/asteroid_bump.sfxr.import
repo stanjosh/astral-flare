@@ -1,0 +1,17 @@
+[remap]
+
+importer="com.timothyqiu.gdfxr.importer"
+type="AudioStreamWAV"
+uid="uid://deipb5fsdfv10"
+path="res://.godot/imported/asteroid_bump.sfxr-aaf6698c4bb2a4250707af181dc926b6.sample"
+
+[deps]
+
+source_file="res://sounds/asteroid_bump.sfxr"
+dest_files=["res://.godot/imported/asteroid_bump.sfxr-aaf6698c4bb2a4250707af181dc926b6.sample"]
+
+[params]
+
+loop=false
+bit_depth=0
+sample_rate=0

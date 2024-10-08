@@ -5,12 +5,8 @@ extends CanvasLayer
 var player : Player
 var paused : bool = false
 
-func _ready() -> void:
-	player = get_tree().get_first_node_in_group("player")
-
-
 func _process(delta: float) -> void:
-	if player:
+	if is_instance_valid(player):
 		shield_bar.position = player.get_global_transform_with_canvas().origin + Vector2(-12, 12)
 
 func _input(event: InputEvent) -> void:

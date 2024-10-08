@@ -1,13 +1,25 @@
-[gd_scene load_steps=9 format=3 uid="uid://bqou3j3rffeh6"]
+[gd_scene load_steps=11 format=3 uid="uid://bqou3j3rffeh6"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_ftq3x"]
 [ext_resource type="Script" path="res://turret.gd" id="2_xl6ag"]
-[ext_resource type="PackedScene" uid="uid://b0ocqpn513x0r" path="res://entity/weapon/laser.tscn" id="3_kvgc1"]
-[ext_resource type="PackedScene" uid="uid://cy3bbber30n6q" path="res://entity/weapon/double_barrel_turret.tscn" id="4_y8r60"]
 
-[sub_resource type="Curve" id="Curve_oqny5"]
-_data = [Vector2(0.011236, 0), 0.0, 0.0, 0, 0, Vector2(0.224719, 0.879121), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 3
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_nc31g"]
+bounce = 1.0
+absorbent = true
+
+[sub_resource type="Curve" id="Curve_eadrj"]
+max_value = 60.0
+_data = [Vector2(0, 8.57143), 0.0, 0.0, 0, 0, Vector2(0.410112, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Curve" id="Curve_vu2kw"]
+max_value = 3.0
+_data = [Vector2(0, 1.87912), 0.0, 0.0, 0, 0, Vector2(1, 0), -1.87912, 0.0, 1, 0]
+point_count = 2
+
+[sub_resource type="Gradient" id="Gradient_qs6j0"]
+offsets = PackedFloat32Array(0.00666667, 0.533333, 0.746667)
+colors = PackedColorArray(0.351044, 0.0582365, 2.40654e-08, 1, 1, 0.239216, 0, 1, 1, 1, 1, 1)
 
 [sub_resource type="Gradient" id="Gradient_gsixn"]
 offsets = PackedFloat32Array(0, 0.845679, 1)
@@ -21,16 +33,41 @@ fill = 1
 fill_from = Vector2(0.5, 0.5)
 fill_to = Vector2(0.5, 0)
 
+[sub_resource type="Curve" id="Curve_oqny5"]
+_data = [Vector2(0.011236, 0), 0.0, 0.0, 0, 0, Vector2(0.224719, 0.879121), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
 [sub_resource type="CircleShape2D" id="CircleShape2D_1nfl1"]
 radius = 72.0
 
 [node name="Player" type="RigidBody2D" groups=["player"]]
+physics_material_override = SubResource("PhysicsMaterial_nc31g")
 gravity_scale = 0.0
 contact_monitor = true
 max_contacts_reported = 3
 linear_damp = 1.0
 angular_damp = 2.0
 script = ExtResource("1_ftq3x")
+
+[node name="DeathParticles" type="CPUParticles2D" parent="."]
+emitting = false
+amount = 1000
+one_shot = true
+preprocess = 0.2
+speed_scale = 2.0
+explosiveness = 1.0
+lifetime_randomness = 0.58
+direction = Vector2(0, 0)
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 10.0
+initial_velocity_max = 60.0
+damping_max = 60.0
+damping_curve = SubResource("Curve_eadrj")
+scale_amount_min = 0.0
+scale_amount_max = 3.0
+scale_amount_curve = SubResource("Curve_vu2kw")
+color_ramp = SubResource("Gradient_qs6j0")
 
 [node name="ShipLines" type="Line2D" parent="."]
 points = PackedVector2Array(-8, -8, 12, 0, -8, 8)
@@ -39,7 +76,11 @@ width = 2.0
 joint_mode = 2
 end_cap_mode = 2
 
-[node name="CPUParticles2D" type="CPUParticles2D" parent="ShipLines"]
+[node name="Shield" type="Sprite2D" parent="ShipLines"]
+modulate = Color(1, 1, 1, 0)
+texture = SubResource("GradientTexture2D_gbuy4")
+
+[node name="EngineParticles" type="CPUParticles2D" parent="ShipLines"]
 position = Vector2(-11, 0)
 amount = 100
 preprocess = 0.5
@@ -60,10 +101,6 @@ scale_amount_curve = SubResource("Curve_oqny5")
 visible = false
 polygon = PackedVector2Array(-8, -8, 12, 0, -8, 8)
 
-[node name="Shield" type="Sprite2D" parent="."]
-modulate = Color(1, 1, 1, 0)
-texture = SubResource("GradientTexture2D_gbuy4")
-
 [node name="Turret" type="Node2D" parent="."]
 position = Vector2(-4, 0)
 script = ExtResource("2_xl6ag")
@@ -76,22 +113,7 @@ shape = SubResource("CircleShape2D_1nfl1")
 
 [node name="Weapons" type="Node2D" parent="Turret"]
 
-[node name="Laser" parent="Turret/Weapons" instance=ExtResource("3_kvgc1")]
-
-[node name="Laser2" parent="Turret/Weapons" instance=ExtResource("3_kvgc1")]
-
-[node name="Laser3" parent="Turret/Weapons" instance=ExtResource("3_kvgc1")]
-
-[node name="Laser4" parent="Turret/Weapons" instance=ExtResource("3_kvgc1")]
-
-[node name="Laser5" parent="Turret/Weapons" instance=ExtResource("3_kvgc1")]
-
-[node name="DoubleBarrelTurret" parent="Turret/Weapons" instance=ExtResource("4_y8r60")]
-
-[node name="DoubleBarrelTurret2" parent="Turret/Weapons" instance=ExtResource("4_y8r60")]
-
-[node name="DoubleBarrelTurret3" parent="Turret/Weapons" instance=ExtResource("4_y8r60")]
+[node name="ShieldRestoreDelayTimer" type="Timer" parent="."]
+one_shot = true
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
-[connection signal="body_entered" from="Turret/AutoAimArea" to="Turret" method="_on_auto_aim_area_body_entered"]
-[connection signal="body_exited" from="Turret/AutoAimArea" to="Turret" method="_on_auto_aim_area_body_exited"]
